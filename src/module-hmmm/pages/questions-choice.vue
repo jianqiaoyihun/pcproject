@@ -2,91 +2,143 @@
   <div class="dashboard-container">
     <el-card style="font-size:14px">
       <el-row>
-        <el-button>新增试题</el-button>
+        <el-button @click="$router.push('/questions/new')">新增试题</el-button>
         <el-button>批量导入</el-button>
       </el-row>
-      <el-row style="margin:20px 0;">
-        <el-col :span="4">
-          <span>学科</span>
-          <el-select style="width:130px;margin-left:10px" placeholder="请选择"></el-select>
-        </el-col>
-        <el-col :span="5">
-          <span>状态</span>
-          <el-select style="width:150px;margin-left:10px" placeholder="请选择"></el-select>
-        </el-col>
-        <el-col :span="5">
-          <span>难度</span>
-          <el-select style="width:150px;margin-left:10px" placeholder="请选择"></el-select>
-        </el-col>
-        <el-col :span="5">
-          <span>试题类型</span>
-          <el-select style="width:150px;margin-left:10px" placeholder="请选择"></el-select>
-        </el-col>
-        <el-col :span="5">
-          <span>标签</span>
-          <el-input style="width:150px;margin-left:10px" placeholder="请输入"></el-input>
-        </el-col>
-      </el-row>
-      <el-row style="margin:20px 0;">
-        <el-col :span="6">
-          <span>录入人</span>
-          <el-input style="width:150px;margin-left:10px" placeholder="请输入"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <span>关键字</span>
-          <el-input style="width:180px;margin-left:10px" placeholder="请输入题目编号/题干"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <span>题目备注</span>
-          <el-input style="width:150px;margin-left:10px" placeholder="请输入"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <span>二级目录</span>
-          <el-input style="width:150px;margin-left:10px" placeholder="请输入二级目录"></el-input>
-        </el-col>
-      </el-row>
-      <el-row style="margin:20px 0;">
-        <el-col :span="8">
-          <span>城市</span>
-          <el-select style="width:150px;margin-left:10px" placeholder="请选择"></el-select>
-          <el-select style="width:150px;margin-left:10px" placeholder="请选择"></el-select>
-        </el-col>
-        <el-col :span="5">
-          <span>企业简称</span>
-          <el-input style="width:150px;margin-left:10px" placeholder="请输入题目编号/题干"></el-input>
-        </el-col>
-        <el-col :span="5">
-          <span>方向</span>
-          <el-input style="width:150px;margin-left:10px" placeholder="请输入"></el-input>
-        </el-col>
-        <el-col :span="5">
-          <el-button size="small">清除</el-button>
-          <el-button size="small" type="primary">搜索</el-button>
-        </el-col>
-      </el-row>
-      <el-tabs v-model="activeName" type="card">
-        <el-tab-pane label="全部" name="all">
-          <el-table :data="questionList" border style="width: 100%">
+
+          <el-form :model="mydata" ref="myForm" inline label-width="80px" style="margin-top:20px">
+            <el-form-item label="学科" prop="subjectValue">
+              <el-select style="width:130px;margin-left:10px" placeholder="请选择" v-model="mydata.subjectValue">
+                <el-option
+                  v-for="item in subjectSimpleLists"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="状态" prop="statusValue">
+              <el-select style="width:150px;margin-left:10px" placeholder="请选择" v-model="mydata.statusValue">
+                <el-option
+                  v-for="item in status"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="难度" prop="difficultyValue">
+              <el-select style="width:150px;margin-left:10px" placeholder="请选择" v-model="mydata.difficultyValue">
+                <el-option
+                  v-for="item in difficulty"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="试题类型" prop="questionTypeValue">
+              <el-select style="width:150px;margin-left:10px" placeholder="请选择" v-model="mydata.questionTypeValue">
+                <el-option
+                  v-for="item in questionType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="标签" prop="tagsValue">
+              <el-input style="width:150px;margin-left:10px" placeholder="请输入" v-model="mydata.tagsValue"></el-input>
+            </el-form-item>
+
+            <el-form-item label="录入人" prop="creatorIDValue">
+              <el-input style="width:150px;margin-left:10px" placeholder="请输入" v-model="mydata.creatorIDValue"></el-input>
+            </el-form-item>
+
+            <el-form-item label="关键字" prop="keywordValue">
+              <el-input style="width:180px;margin-left:10px" placeholder="请输入题目编号/题干" v-model="mydata.keywordValue"></el-input>
+            </el-form-item>
+
+            <el-form-item label="题目备注" prop="remarksValue">
+              <el-input style="width:150px;margin-left:10px" placeholder="请输入" v-model="mydata.remarksValue"></el-input>
+            </el-form-item>
+
+            <el-form-item label="二级目录" prop="catalogIDValue">
+              <el-input style="width:150px;margin-left:10px" placeholder="请输入二级目录" v-model="mydata.catalogIDValue"></el-input>
+            </el-form-item>
+
+            <el-form-item label="城市" prop="provincesValue">
+              <el-select @change="changeCity" style="width:150px;margin-left:10px" placeholder="请选择" v-model="mydata.provincesValue">
+                <el-option
+                  v-for="(item,index) in provincesList"
+                  :key="index"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="区域" prop="citysValue">  
+              <el-select style="width:150px;margin-left:10px" placeholder="请选择" v-model="mydata.citysValue">
+                <el-option
+                  v-for="(item,index) in citysList"
+                  :key="index"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="企业简称" prop="shortNameValue">
+              <el-input style="width:150px;margin-left:10px" placeholder="请输入题目编号/题干" v-model="mydata.shortNameValue"></el-input>
+            </el-form-item>
+
+            <el-form-item label="方向" prop="directionValue">
+              <el-input style="width:150px;margin-left:10px" placeholder="请输入" v-model="mydata.directionValue"></el-input>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button size="small" @click="clearAll">清除</el-button>
+              <el-button size="small" type="primary">搜索</el-button>
+            </el-form-item>
+
+          </el-form>
+
+          <div>
+            <el-radio-group v-model="radio" @change="changeContent">
+              <el-radio-button label="all">全部</el-radio-button>
+              <el-radio-button label="noPass">待审核</el-radio-button>
+              <el-radio-button label="pass">已审核</el-radio-button>
+            </el-radio-group>
+          </div>
+   
+          <el-table :data="tableList" border style="width: 100%">
             <el-table-column fixed prop="id" label="序号" width="50"></el-table-column>
             <el-table-column prop="number" label="试题编号" width="120"></el-table-column>
-            <el-table-column prop="subjectID" label="学科" width="90"></el-table-column>
-            <el-table-column prop="questionType" label="题型" width="110"></el-table-column>
+            <el-table-column prop="subjectID" label="学科" width="90" :formatter="formatterSubject"></el-table-column>
+            <el-table-column prop="questionType" label="题型" width="110" :formatter="formatterType"></el-table-column>
             <el-table-column prop="question" label="题干" width="130"></el-table-column>
-            <el-table-column prop="addDate" label="录入时间" width="120"></el-table-column>
+            <el-table-column prop="addDate" label="录入时间" width="100">
+              <template slot-scope="obj">{{ obj.row.addDate | parseTimeByString }}</template>
+            </el-table-column>
             <el-table-column prop="creator" label="录入人" width="100"></el-table-column>
-            <el-table-column prop="difficulty" label="难度" width="120"></el-table-column>
+            <el-table-column prop="difficulty" label="难度" width="120" :formatter="formatterDifficulty"></el-table-column>
             <el-table-column prop="zip" label="使用次数" width="60"></el-table-column>
-            <el-table-column prop="chkState" label="审核状态" width="60"></el-table-column>
+            <el-table-column prop="chkState" label="审核状态" width="80" :formatter="formatterChkState"></el-table-column>
             <el-table-column prop="chkRemarks" label="审核意见" width="80"></el-table-column>
             <el-table-column prop="chkUser" label="审核人" width="70"></el-table-column>
-            <el-table-column prop="publishState" label="发布状态" width="80"></el-table-column>
+            <el-table-column prop="publishState" label="发布状态" width="80" :formatter="formatterPublishState"></el-table-column>
             <el-table-column fixed="right" label="操作" width="200">
               <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">审核</el-button>
+                <el-button  type="text" size="small">审核</el-button>
                 <el-button type="text" size="small">预览</el-button>
                 <el-button type="text" size="small">下架</el-button>
-                <el-button type="text" size="small">修改</el-button>
-                <el-button type="text" size="small">删除</el-button>
+                <el-button type="text" size="small" @click="$router.push('/questions/new')">修改</el-button>
+                <el-button type="text" size="small" @click="handleClick(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -100,53 +152,122 @@
               @current-change="changePage"
             ></el-pagination>
           </el-row>
-        </el-tab-pane>
-        <el-tab-pane label="待审核" name="beforeExamine">配置管理</el-tab-pane>
-        <el-tab-pane label="已审核" name="examined">角色管理</el-tab-pane>
-      </el-tabs>
     </el-card>
   </div>
 </template>
 
 <script>
-import { choice as questionsChoies } from "../../api/hmmm/questions";
+import { choice as questionsChoies,remove } from "../../api/hmmm/questions";
+import { simple as subjectSimpleList } from "../../api/hmmm/subjects";
+import { status, difficulty, questionType } from "../../api/hmmm/constants";
+import { provinces, citys } from "../../api/hmmm/citys";
 export default {
   data() {
     return {
-      activeName: "all",
+      radio: 'all',
       questionList: [],
       questionListPass: [],
+      questionListNoPass: [],
+      provincesList: [],
+      tableList: [],
+      citysList: [],
+      mydata: {
+        subjectValue: '',
+        statusValue: '',
+        difficultyValue: '',
+        questionTypeValue: '',
+        tagsValue: null,
+        provincesValue: '',
+        citysValue: '',
+        keywordValue: null,
+        remarksValue: null,
+        shortNameValue: null,
+        directionValue: null,
+        creatorIDValue: null,
+        catalogIDValue: null
+      },
+      status,
+      difficulty,
+      questionType,
+      subjectSimpleLists: [],
       page: {
         total: 8,
         currentPage: 1,
         pageSize: 4
-      },
+      }
     };
   },
   methods: {
+    changeContent(value){
+      if (value=="all"){
+        this.tableList = this.questionList
+      }else if(value=="pass"){
+        this.tableList = this.questionListPass
+      }else if(value=="noPass"){
+        this.tableList = this.questionListNoPass
+      }
+    },
     async getQuestionsChoiceList() {
       let result = await questionsChoies();
       this.questionList = result.data.items;
-      // console.log(this.questionList)
+      this.questionList.filter((item)=>{
+        item.chkState ? this.questionListPass.push(item) : this.questionListNoPass.push(item) 
+      })
+      this.tableList = this.questionList
+      // console.log(this.questionListPass)
     },
-    async getQuestionsBeforeExamine() {
-      let result = await questionsChoies({ difficulty: "1" });
-      this.questionListPass = result.data.items;
-      console.log(this.questionListPass);
-    }
+    async getSubjectSimpleList() {
+      let result = await subjectSimpleList();
+      this.subjectSimpleLists = result.data;
+      // console.log(this.subjectSimpleLists)
+      // 获取城市数据
+      this.provincesList = await provinces()
+    },
+    async handleClick(row){
+      await this.$confirm("您确定要删除吗")
+      await remove(row)
+      alert("删除成功") 
+      this.getQuestionsChoiceList();
+    },
+    changeCity(item) {
+      console.log(item)
+      this.citysList = citys(item)
+      // console.log(this.citysList)
+    },
+    changePage() {
+      console.log("别报错了")
+    },
+    clearAll() {
+      this.$refs.myForm.resetFields();
+    },
+    formatterSubject(row, column, cellValue, index) {
+      let result = this.subjectSimpleLists.filter(item => item.value === cellValue); // 得到一个筛选后的数据
+      return result.length ? result[0].label : "未知状态";
+    },
+    formatterType(row, column, cellValue, index) {
+      let result = this.questionType.filter(item => item.value == cellValue); // 得到一个筛选后的数据
+      return result.length ? result[0].label : "未知状态";
+    },
+    formatterDifficulty(row, column, cellValue, index) {
+      let result = this.difficulty.filter(item => item.value == cellValue); // 得到一个筛选后的数据
+      return result.length ? result[0].label : "未知状态";
+    },
+    formatterChkState(row, column, cellValue, index) {
+      let result = this.difficulty.filter(item => item.value == cellValue); // 得到一个筛选后的数据
+      return cellValue ? "已审核" : "待审核";
+    },
+    formatterPublishState(row, column, cellValue, index) {
+      let result = this.difficulty.filter(item => item.value == cellValue); // 得到一个筛选后的数据
+      return cellValue ? "已发布" : "待发布";
+    },
   },
   created() {
     this.getQuestionsChoiceList();
-    this.getQuestionsBeforeExamine();
-  }
+    this.getSubjectSimpleList();
+    console.log(this.radio)
+  },
+  
 };
 </script>
 
-<style scoped lang="scss">
-// 1. 如果在此处 scoped 当前组件下生效样式
-// 2. 在style中的所有选择器 编译的时候会自动带上属性选择器
-// 3. .box{} ===> .box[data-v-2c9827a4]{} 交集选择器
-// 4. 在当前组件下暴露的标签都会加上 data-v-2c9827a4 属性
-// 5. 但是如果是组件，其他组件内部的标签是不会加上这个属性 意味写组件内部的样式是不会生效的
-// 6. 其他组件的样式都不会生效
-</style>
+<style scoped lang="scss"></style>
